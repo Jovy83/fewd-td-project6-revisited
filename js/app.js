@@ -50,26 +50,28 @@ const reset = () => {
     phraseUl.innerHTML = "";
 
     // reset lives
-    scoreboardOl.innerHTML = "";
-    for (let i = 0; i < 5; i++) {
-        addLife();
-    }
+    resetLife();
+};
+
+const resetLife = () => {
     missed = 0;
+    const lifeLIs = scoreboardOl.children;
+    for(let i = 0; i < lifeLIs.length; i++) {
+        const lifeLI = lifeLIs[i];
+        lifeLI.className = "tries";
+        const lifeImg = lifeLI.firstElementChild;
+        lifeImg.src = "images/liveHeart.png";
+    }
 };
 
-const addLife = () => {
-    const newLi = document.createElement("li");
-    newLi.className = "tries";
-
-    const newImg = document.createElement("img");
-    newImg.src = "images/liveHeart.png";
-    newImg.style.height = "35px";
-    newImg.style.width = "30px";
-
-    newLi.appendChild(newImg);
-
-    scoreboardOl.appendChild(newLi);
-};
+const subtractLife = () => {
+    missed++;
+    const lifeLIs = scoreboardOl.querySelectorAll(".tries");
+    const lifeLI = lifeLIs[lifeLIs.length - 1]; // get the last one
+    const lifeImg = lifeLI.firstElementChild;
+    lifeImg.src = "images/lostHeart.png";
+    lifeLI.removeAttribute("class");
+}
 
 // return a random phrase from an array
 const getRandomPhraseAsArray = arr => {
@@ -188,9 +190,7 @@ qwertyDiv.addEventListener("click", (e) => {
 
             if (!letterFound) {
                 // player guessed wrong
-                missed++;
-                const lifeLI = scoreboardOl.querySelector("li:last-child");
-                scoreboardOl.removeChild(lifeLI);
+                subtractLife();
             } 
         }
 
